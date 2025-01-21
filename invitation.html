@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation Book</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes floatingFlowers {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        :root {
+            --primary: #B8860B;
+            --secondary: #800020;
+            --accent: #FFD700;
+            --background: #FFF8DC;
+            --text: #4A2F1E;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .book-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: linear-gradient(135deg, #fff5e6, #fff);
+            box-shadow: 0 0 40px rgba(184, 134, 11, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid var(--primary);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .subtitle {
+            font-size: 2.5rem;
+            color: #FFF;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .section {
+            padding: 3rem;
+            margin: 2rem;
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            border: 1px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(184,134,11,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .section:hover::after {
+            opacity: 1;
+        }
+
+        .section-title {
+            color: var(--secondary);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--accent);
+            position: relative;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '❀';
+            position: absolute;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .section-title::before {
+            left: 20px;
+        }
+
+        .section-title::after {
+            right: 20px;
+        }
+
+        .couple-info {
+            display: flex;
+            justify-content: space-around;
+            gap: 4rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .person {
+            text-align: center;
+            flex: 1;
+            padding: 2rem;
+            background: linear-gradient(45deg, rgba(184,134,11,0.1), transparent);
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+
+        .person:hover {
+            transform: translateY(-10px);
+        }
+
+        .person h3 {
+            color: var(--secondary);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .events {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .event-card {
+            background: linear-gradient(45deg, #fff, #fff8dc);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(184,134,11,0.1);
+            transition: all 0.4s;
+            border: 1px solid rgba(184,134,11,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '✧';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--primary);
+            font-size: 1.2rem;
+            opacity: 0.5;
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 8px 25px rgba(184,134,11,0.2);
+        }
+
+        .venue {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/api/placeholder/1200/400');
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin: 3rem 0;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .venue::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, rgba(255,215,0,0.2), transparent);
+            animation: pulse 2s infinite;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .decoration {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            width: 20px;
+            height: 20px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23B8860B' d='M12,1L3,5v6c0,5.55,3.84,10.74,9,12c5.16-1.26,9-6.45,9-12V5L12,1z'/%3E%3C/svg%3E");
+            background-size: contain;
+            opacity: 0.6;
+            animation: floatingFlowers 4s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .book-container {
+                margin: 1rem;
+            }
+
+            .couple-info {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+        }
+
+        .om-symbol {
+            font-size: 4rem;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+            margin-bottom: 1rem;
+        }
+
+        .family-members {
+            columns: 2;
+            column-gap: 3rem;
+            margin: 2rem 0;
+        }
+
+        .family-member {
+            break-inside: avoid;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(184,134,11,0.05);
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .family-member:hover {
+            transform: translateX(10px);
+            background: rgba(184,134,11,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="book-container" id="bookContainer">
+        <div class="header">
+            <div class="om-symbol">ॐ</div>
+            <h1 class="title">श्री गणेशाय नमः</h1>
+            <h2 class="subtitle">वैवाहिक निमंत्रण</h2>
+        </div>
+
+        <div class="section" id="coupleSection">
+            <h2 class="section-title">परिचय</h2>
+            <div class="couple-info">
+                <div class="person">
+                    <h3>वधू</h3>
+                    <p>आयुः मानसी (सीमा)</p>
+                    <p>सुपुत्री श्रीमती गुडिया सुभेन्द्र प्रताप सिंह चौहान</p>
+                    <p>सुपौत्री-श्रीमती निर्मला जयपाल सिंह चौहान </p>
+                    <p>प्रपौत्री-स्वः श्रीमती विटटनदेवी लल्लानवाब सिंह चौहान</p>
+                </div>
+                <div class="person">
+                    <h3>वर</h3>
+                    <p>चि. अमित</p>
+                    <p>सुपौत्र स्वर्गीय श्रीमती सुशीला द्वारिका सिंह राजावत</p>
+                    <p>नाती स्व देवी श्री जुगराज सिंह चौहान</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="eventsSection">
+            <h2 class="section-title">मंगल कार्य</h2>
+            <div class="events">
+                <div class="event-card">
+                    <h3>मात पूजन</h3>
+                    <p>25 फरवरी, शनिवार</p>
+                </div>
+                <div class="event-card">
+                    <h3>स्वागत</h3>
+                    <p>24 फरवरी, सोम</p>
+                </div>
+                <div class="event-card">
+                    <h3>बारात</h3>
+                    <p>25 फरवरी, मंगलवार</p>
+                </div>
+                <div class="event-card">
+                    <h3>बिदाई</h3>
+                    <p>26 फरवरी</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="familySection">
+            <h2 class="section-title">परिवार</h2>
+            <div class="family-members">
+                <div class="family-member">
+                    <h3>भाई-भाभी:</h3>
+                    <p>ताऊताई- श्रीमती कमला देवी महन्ते सिंह चौहान</p>
+                    <p>श्रीमती अनुराधा योगेन्द्र सिंह चौहान</p>
+                    <p>श्रीमती बेबी विजय सिंह चौहान</p>
+                    <p>श्रीमती निर्मला शैलेन्द्र सिंह चौहान</p>
+                </div>
+                <div class="family-member">
+                    <h3>भाई:</h3>
+                    <p>हर्षवर्धन सिंह चौहान</p>
+                    <p>मन्नु सिंह चौहान</p>
+                    <p>अभय सिंह चौहान</p>
+                    <p>जयवर्धन सिंह चौहान</p>
+                    <p>अथर्व सिह चौहान</p>
+                </div>
+                <div class="family-member">
+                    <h3>भतीजे:</h3>
+                    <p>आर्यन सिंह चौहान</p>
+                    <p>अक्षय सिंह</p>
+                    <p>आधिराज सिंह</p>
+                    <p>युवराज सिंह</p>
+                    <p>विश्वदीप सिंह</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="venue">
+            <h2 class="section-title">वैवाहिक स्थल</h2>
+            <p>श्रीराम पैलेस, अतरौली रोड</p>
+            <p>ग्राम - पुरखा बाजी राव, पोस्ट जरौवा</p>
+            <p>तहसील - सण्डीला, जनपद-हरदोई</p>
+        </div>
+
+        <div class="footer">
+            <h2>आप सभी सादर आमंत्रित हैं</h2>
+        </div>
+    </div>
+
+   
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial fade in
+            gsap.from('#bookContainer', {
+                opacity: 0,
+                y: 100,
+                duration: 1.5,
+                ease: 'power3.out'
+            });
+
+            // Scroll animations for sections
+            gsap.utils.toArray('.section').forEach((section, i) => {
+                gsap.from(section, {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 80%',
+                        end: 'top 20%',
+                        scrub: 1,
+                        toggleActions: 'play none none reverse'
+                    },
+                    opacity: 0,
+                    y: 50,
+                    scale: 0.9,
+                    duration: 1,
+                    ease: 'power2.out'
+                });
+            });
+
+            // Floating decorations
+            function createDecoration() {
+                const decoration = document.createElement('div');
+                decoration.className = 'decoration';
+                
+                const startX = Math.random() * window.innerWidth;
+                const startY = window.innerHeight + 100;
+                
+                decoration.style.left = `${startX}px`;
+                decoration.style.top = `${startY}px`;
+                
+                document.body.appendChild(decoration);
+                
+                gsap.to(decoration, {
+                    y: -window.innerHeight - 100,
+                    x: `random(-100, 100)`,
+                    rotation: `random(-360, 360)`,
+                    duration: `random(4, 8)`,
+                    ease: 'none',
+                    onComplete: () => decoration.remove()
+                });
+            }
+
+            // Create decorations periodically
+            setInterval(createDecoration, 1000);
+
+            // Event cards hover animation
+            const eventCards = document.querySelectorAll('.event-card');
+            eventCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, {
+                        scale: 1.05,
+                        rotation: `random(-2, 2)`,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        scale: 1,
+                        rotation: 0,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                });
+            });
+
+            // Parallax effect for venue section
+            gsap.to('.venue', {
+                scrollTrigger: {
+                    trigger: '.venue',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                backgroundPosition: '50% 30%',
+                ease: 'none'
+            });
+        });
+    </script>
+</body>
